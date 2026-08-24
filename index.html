@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amity Orientation 2026 — Check-In</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16233F; --ink-soft:#3C4A6B; --paper:#F1F1EB; --card:#FFFFFF; --line:#D9D6C8;
+    --gold:#C6963C; --gold-soft:#EFDFB8;
+    --success:#3C7A5A; --success-bg:#E3F0E9;
+    --error:#A8402A; --error-bg:#F6E5DF;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'IBM Plex Sans',sans-serif; min-height:100vh;
+    display:flex; align-items:flex-start; justify-content:center;
+    padding:36px 16px 64px;
+  }
+  .app{max-width:440px; width:100%;}
+  .masthead{text-align:center; margin-bottom:24px;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; color:var(--gold); font-weight:600; margin:0 0 6px;}
+  h1{font-family:'Fraunces',serif; font-weight:600; font-size:26px; margin:0;}
+  h1 .dot{color:var(--gold);}
+  p.sub{font-size:13px; color:var(--ink-soft); margin:8px 0 0;}
+
+  .card{background:var(--card); border-radius:16px; box-shadow:0 14px 34px rgba(22,35,63,.12); padding:26px;}
+  .hidden{display:none !important;}
+
+  label{display:block; font-size:12px; font-weight:600; color:var(--ink-soft); margin-bottom:8px;}
+  #formNoInput{
+    width:100%; font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:.04em;
+    padding:14px 16px; border:1.5px solid var(--line); border-radius:10px; background:var(--paper); color:var(--ink);
+    text-align:center;
+  }
+  #formNoInput:focus{outline:2px solid var(--gold); outline-offset:2px;}
+
+  .btn{
+    font-family:'IBM Plex Sans',sans-serif; font-weight:700; font-size:15px;
+    border:none; border-radius:10px; padding:14px; cursor:pointer; width:100%; margin-top:14px;
+    transition:transform .12s ease;
+  }
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{background:var(--ink); color:#fff;}
+  .btn-success{background:var(--success); color:#fff;}
+  .btn-success:disabled{background:#B9C4BC; cursor:not-allowed;}
+
+  .message{text-align:center; padding:12px 16px; border-radius:10px; font-size:14px; margin-top:14px;}
+  .message.error{background:var(--error-bg); color:var(--error);}
+  .message.info{background:var(--gold-soft); color:#7A5A1E;}
+
+  .ticket-top{text-align:center; padding-bottom:18px;}
+  .ticket-label{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.16em; color:var(--gold); font-weight:600; margin:0 0 2px;}
+  .ticket-no{font-family:'IBM Plex Mono',monospace; font-size:20px; font-weight:600; margin:0 0 12px;}
+  .ticket-name{font-family:'Fraunces',serif; font-size:22px; font-weight:600; margin:0 0 4px;}
+  .ticket-course{font-size:14px; color:var(--ink-soft); margin:0 0 2px;}
+  .ticket-marks{font-size:13px; color:var(--ink-soft); margin:0;}
+
+  .perforation{position:relative; border-top:2px dashed var(--line); margin:0 -26px;}
+  .perforation::before,.perforation::after{content:'';position:absolute;top:-11px;width:22px;height:22px;border-radius:50%;background:var(--paper);}
+  .perforation::before{left:-11px;} .perforation::after{right:-11px;}
+
+  .field{margin-top:18px;}
+  select{
+    width:100%; padding:12px; border-radius:8px; border:1.5px solid var(--line);
+    background:var(--paper); color:var(--ink); font-family:'IBM Plex Sans',sans-serif; font-size:14px;
+  }
+
+  .success-screen{text-align:center; padding:20px 6px;}
+  .success-screen .check{font-size:44px; margin-bottom:6px;}
+  .success-screen h2{font-family:'Fraunces',serif; font-size:22px; margin:0 0 6px;}
+  .success-screen p{font-size:14px; color:var(--ink-soft); margin:0;}
+  .again-link{display:inline-block; margin-top:18px; font-size:13px; color:var(--ink-soft); text-decoration:underline; cursor:pointer; background:none; border:none;}
+
+  .demo-banner{
+    background:var(--gold-soft); color:#7A5A1E; font-size:12px; text-align:center;
+    padding:8px 12px; border-radius:8px; margin-bottom:16px;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="masthead">
+    <p class="eyebrow">AMITY UNIVERSITY JHARKHAND</p>
+    <h1>Orientation 2026<span class="dot"> · </span>Check-In</h1>
+    <p class="sub">Enter your Form Number to check in</p>
+  </div>
+
+  <div id="demoBanner" class="demo-banner hidden">Preview mode — try Form No. 13186773 or 13184641. Connect your Google Sheet links in the code to go live.</div>
+
+  <div class="card">
+    <div id="lookupView">
+      <label for="formNoInput">Form Number</label>
+      <input id="formNoInput" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 13186773">
+      <button id="findBtn" class="btn btn-primary" type="button">Find my details</button>
+      <div id="message" class="message hidden"></div>
+    </div>
+
+    <div id="detailsView" class="hidden">
+      <div class="ticket-top">
+        <p class="ticket-label">FORM NO.</p>
+        <p class="ticket-no" id="ticketFormNo">—</p>
+        <h2 class="ticket-name" id="ticketName">—</h2>
+        <p class="ticket-course" id="ticketCourse">—</p>
+        <p class="ticket-marks" id="ticketMarks">—</p>
+      </div>
+      <div class="perforation"></div>
+
+      <div class="field">
+        <label for="tshirtSelect">T-shirt size</label>
+        <select id="tshirtSelect">
+          <option value="">Select size</option>
+          <option>XS</option><option>S</option><option>M</option><option>L</option><option>XL</option><option>XXL</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="familySelect">Total family members attending with you</label>
+        <select id="familySelect"></select>
+      </div>
+
+      <button id="submitBtn" class="btn btn-success" type="button">Confirm &amp; check in</button>
+      <div id="submitMessage" class="message hidden"></div>
+    </div>
+
+    <div id="successView" class="hidden success-screen">
+      <div class="check">✓</div>
+      <h2 id="successName">Welcome!</h2>
+      <p>You're checked in for Orientation 2026.</p>
+      <button class="again-link" id="againBtn" type="button">Check in another student</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Fill these in after completing the setup steps ──
+const REGISTRANTS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRm-h5Upe7nV8mxVSm_P0QOW7n-aRBLF_XkVSt5V0FsDvMLy9Dj52aq0Ajs62f-XSmHME3Vh_OgfvZn/pub?gid=1774452458&single=true&output=csv';
+const ATTENDANCE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwAitZltxyMeGjxHkYIgS6GvKepX9S7ZZr2xbWOHk5c1jgBRsxVsEhpd5FIVIjO71Zu/exec';
+// ──────────────────────────────────────────────────
+
+const DEMO_MODE = REGISTRANTS_CSV_URL === 'REGISTRANTS_CSV_URL' || ATTENDANCE_SCRIPT_URL === 'ATTENDANCE_SCRIPT_URL';
+const DEMO_DATA = {
+  '13186773': { name: 'SURYANSH', course: 'B.A.,LL.B (H)', marks: '' },
+  '13184641': { name: 'AFIFA UROOJ', course: 'B.A.,LL.B (H)', marks: '' },
+};
+
+const els = {
+  demoBanner: document.getElementById('demoBanner'),
+  lookupView: document.getElementById('lookupView'),
+  detailsView: document.getElementById('detailsView'),
+  successView: document.getElementById('successView'),
+  formNoInput: document.getElementById('formNoInput'),
+  findBtn: document.getElementById('findBtn'),
+  message: document.getElementById('message'),
+  ticketFormNo: document.getElementById('ticketFormNo'),
+  ticketName: document.getElementById('ticketName'),
+  ticketCourse: document.getElementById('ticketCourse'),
+  ticketMarks: document.getElementById('ticketMarks'),
+  tshirtSelect: document.getElementById('tshirtSelect'),
+  familySelect: document.getElementById('familySelect'),
+  submitBtn: document.getElementById('submitBtn'),
+  submitMessage: document.getElementById('submitMessage'),
+  successName: document.getElementById('successName'),
+  againBtn: document.getElementById('againBtn'),
+};
+
+for (let i = 0; i <= 9; i++) {
+  const opt = document.createElement('option');
+  opt.value = i; opt.textContent = i;
+  els.familySelect.appendChild(opt);
+}
+
+let registrants = {};
+let currentFormNo = null;
+let currentStudent = null;
+
+function showMessage(el, text, type) {
+  el.textContent = text;
+  el.className = 'message ' + type;
+  el.classList.remove('hidden');
+}
+function clearMessage(el) { el.classList.add('hidden'); }
+
+function parseCSV(text) {
+  const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  const map = {};
+  for (const line of lines) {
+    const parts = line.split(',').map(p => p.trim().replace(/^"|"$/g, ''));
+    if (parts.length < 2) continue;
+    const [formNo, name, course, marks] = parts;
+    if (!formNo || !/^\d+$/.test(formNo)) continue; // skips header row and any malformed lines
+    map[formNo] = { name: name || '', course: course || '', marks: marks || '' };
+  }
+  return map;
+}
+
+async function loadRegistrants() {
+  if (DEMO_MODE) {
+    registrants = DEMO_DATA;
+    els.demoBanner.classList.remove('hidden');
+    return;
+  }
+  try {
+    const res = await fetch(REGISTRANTS_CSV_URL);
+    const text = await res.text();
+    registrants = parseCSV(text);
+  } catch (e) {
+    showMessage(els.message, 'Could not load the student list right now. Please try again in a moment.', 'error');
+  }
+}
+
+els.findBtn.addEventListener('click', () => {
+  const formNo = els.formNoInput.value.trim();
+  clearMessage(els.message);
+  if (!formNo) return;
+
+  const student = registrants[formNo];
+  if (!student) {
+    showMessage(els.message, `This Form No. isn't in our enrolled students list. Please double-check it or ask at the help desk.`, 'error');
+    return;
+  }
+
+  currentFormNo = formNo;
+  currentStudent = student;
+  els.ticketFormNo.textContent = formNo;
+  els.ticketName.textContent = student.name || '—';
+  els.ticketCourse.textContent = student.course || '—';
+  els.ticketMarks.textContent = student.marks ? `Marks: ${student.marks}` : '';
+  els.tshirtSelect.value = '';
+  els.familySelect.value = '0';
+
+  els.lookupView.classList.add('hidden');
+  els.detailsView.classList.remove('hidden');
+});
+
+els.submitBtn.addEventListener('click', async () => {
+  if (!currentFormNo) return;
+  const payload = {
+    formNo: currentFormNo,
+    name: currentStudent.name,
+    course: currentStudent.course,
+    marks: currentStudent.marks,
+    tshirtSize: els.tshirtSelect.value,
+    familyCount: els.familySelect.value,
+  };
+
+  els.submitBtn.disabled = true;
+  els.submitBtn.textContent = 'Saving…';
+  clearMessage(els.submitMessage);
+
+  try {
+    if (!DEMO_MODE) {
+      await fetch(ATTENDANCE_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+    }
+    els.successName.textContent = `Welcome, ${currentStudent.name}!`;
+    els.detailsView.classList.add('hidden');
+    els.successView.classList.remove('hidden');
+  } catch (e) {
+    showMessage(els.submitMessage, 'Could not save your check-in. Please try again or ask at the help desk.', 'error');
+  } finally {
+    els.submitBtn.disabled = false;
+    els.submitBtn.textContent = 'Confirm & check in';
+  }
+});
+
+els.againBtn.addEventListener('click', () => {
+  currentFormNo = null; currentStudent = null;
+  els.formNoInput.value = '';
+  els.successView.classList.add('hidden');
+  els.lookupView.classList.remove('hidden');
+  els.formNoInput.focus();
+});
+
+loadRegistrants();
+</script>
+</body>
+</html>
