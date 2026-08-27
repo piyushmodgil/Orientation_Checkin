@@ -33,6 +33,7 @@
   .hidden{display:none !important;}
 
   label{display:block; font-size:12px; font-weight:600; color:var(--ink-soft); margin-bottom:8px;}
+  .field-label-strong{font-size:15px; font-weight:700; color:var(--ink); margin-bottom:8px;}
   #formNoInput{
     width:100%; font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:.04em;
     padding:14px 16px; border:1.5px solid var(--line); border-radius:10px; background:var(--paper); color:var(--ink);
@@ -118,7 +119,7 @@
       <div class="perforation"></div>
 
       <div class="field">
-        <label for="tshirtSelect">T-shirt size</label>
+        <label class="field-label-strong" for="tshirtSelect">T-shirt size</label>
         <select id="tshirtSelect">
           <option value="">Select size</option>
           <option>XS</option><option>S</option><option>M</option><option>L</option><option>XL</option><option>XXL</option>
@@ -126,7 +127,7 @@
       </div>
 
       <div class="field">
-        <label for="familySelect">Family members attending with you (not including yourself)</label>
+        <label class="field-label-strong" for="familySelect">Family members attending with you (not including yourself)</label>
         <select id="familySelect"></select>
       </div>
 
@@ -139,7 +140,7 @@
       <h2 id="successName">Welcome!</h2>
       <p>You're checked in for Orientation 2026.</p>
       <div class="success-details">
-        <p>👕 Please collect your <strong id="successTshirt">—</strong> size T-shirt</p>
+        <p>👕 Show this screen at the registration counter to collect your <strong id="successTshirt">—</strong> T-shirt</p>
         <p>👨‍👩‍👧 Family members attending with you (excluding yourself): <strong id="successFamily">—</strong></p>
       </div>
       <button class="again-link" id="againBtn" type="button">Check in another student</button>
