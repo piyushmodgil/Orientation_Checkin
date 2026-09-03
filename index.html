@@ -390,11 +390,13 @@ els.submitBtn.addEventListener('click', async () => {
 
   try {
     if (!DEMO_MODE) {
-      await fetch(ATTENDANCE_SCRIPT_URL, {
+      const res = await fetch(ATTENDANCE_SCRIPT_URL, {
         method: 'POST',
-        mode: 'no-cors',
         body: JSON.stringify(payload),
       });
+      if (!res.ok) {
+        throw new Error('Server rejected the request: ' + res.status);
+      }
     }
     els.successName.textContent = `Welcome, ${currentStudent.name}!`;
     els.successTshirt.textContent = payload.tshirtSize || '—';
