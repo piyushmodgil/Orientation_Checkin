@@ -29,7 +29,7 @@
   h1 .dot{color:var(--gold);}
   p.sub{font-size:13px; color:var(--ink-soft); margin:8px 0 0;}
 
-  .card{background:var(--card); border-radius:16px; box-shadow:0 14px 34px rgba(22,35,63,.12); padding:26px;}
+  .card{background:var(--card); border-radius:16px; box-shadow:0 14px 34px rgba(22,35,63,.12); padding:26px; overflow:hidden;}
   .hidden{display:none !important;}
 
   label{display:block; font-size:12px; font-weight:600; color:var(--ink-soft); margin-bottom:8px;}
@@ -372,25 +372,6 @@ els.findBtn.addEventListener('click', () => {
   els.detailsView.classList.remove('hidden');
 });
 
-async function saveCheckinWithRetry(payload, attempts) {
-  for (let i = 0; i < attempts; i++) {
-    try {
-      await fetch(ATTENDANCE_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        body: JSON.stringify(payload),
-      });
-    } catch (e) {
-      // ignore — opaque no-cors responses don't reveal success/failure anyway
-    }
-    if (i < attempts - 1) {
-      const delay = 500 + Math.random() * 700; // small random wait so repeat sends don't all collide
-      await new Promise(res => setTimeout(res, delay));
-    }
-  }
-  return true;
-}
-
 els.submitBtn.addEventListener('click', async () => {
   if (!currentFormNo) return;
   const payload = {
@@ -408,8 +389,11 @@ els.submitBtn.addEventListener('click', async () => {
 
   try {
     if (!DEMO_MODE) {
-      const ok = await saveCheckinWithRetry(payload, 3);
-      if (!ok) throw new Error('save-failed');
+      await fetch(ATTENDANCE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: JSON.stringify(payload),
+      });
     }
     els.successName.textContent = `Welcome, ${currentStudent.name}!`;
     els.successTshirt.textContent = payload.tshirtSize || '—';
