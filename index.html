@@ -105,6 +105,8 @@
   .status-present{color:var(--success) !important;}
 
   .two-col{display:flex; gap:10px; margin:0 20px 18px;}
+  .single-box-wrap{margin:0 20px 18px; display:flex; justify-content:center;}
+  .single-box{max-width:220px;}
   .info-box{flex:1; border-radius:12px; padding:14px 10px; text-align:center; border:1px solid var(--line); display:flex; flex-direction:column;}
   .info-box.gold-box{background:var(--gold-soft);}
   .info-box.navy-box{background:#EDF0F6;}
@@ -171,14 +173,6 @@
       <div class="perforation"></div>
 
       <div class="field">
-        <label class="field-label-strong" for="tshirtSelect">T-shirt size</label>
-        <select id="tshirtSelect">
-          <option value="">Select size</option>
-          <option>XS</option><option>S</option><option>M</option><option>L</option><option>XL</option><option>XXL</option>
-        </select>
-      </div>
-
-      <div class="field">
         <label class="field-label-strong" for="familySelect">Family members attending with you (not including yourself)</label>
         <select id="familySelect"></select>
       </div>
@@ -211,14 +205,8 @@
         <div class="details-row"><span>Status</span><strong class="status-present">Present ✓</strong></div>
       </div>
 
-      <div class="two-col">
-        <div class="info-box gold-box">
-          <div class="info-icon">👕</div>
-          <p class="info-label">T-Shirt Size</p>
-          <p class="info-value" id="successTshirt">—</p>
-          <p class="info-note">Show this confirmation screen at the registration counter to collect your T-shirt.</p>
-        </div>
-        <div class="info-box navy-box">
+      <div class="single-box-wrap">
+        <div class="info-box navy-box single-box">
           <div class="info-icon">👨‍👩‍👧</div>
           <p class="info-label">Family Members</p>
           <p class="info-value" id="successFamily">—</p>
@@ -227,11 +215,10 @@
       </div>
 
       <div class="next-steps">
-        <p class="next-steps-title">What's next?</p>
+        <p class="next-steps-title">What happens next?</p>
         <div class="steps-row">
           <div class="step"><span class="step-num">1</span><strong>Registration Counter</strong><p>Proceed with this screen.</p></div>
-          <div class="step"><span class="step-num">2</span><strong>Collect T-Shirt</strong><p>As per your selected size.</p></div>
-          <div class="step"><span class="step-num">3</span><strong>Enjoy Orientation</strong><p>Head inside and have fun!</p></div>
+          <div class="step"><span class="step-num">2</span><strong>Enjoy Orientation</strong><p>Head inside and have fun!</p></div>
         </div>
       </div>
 
@@ -267,12 +254,10 @@ const els = {
   ticketName: document.getElementById('ticketName'),
   ticketCourse: document.getElementById('ticketCourse'),
   ticketMarks: document.getElementById('ticketMarks'),
-  tshirtSelect: document.getElementById('tshirtSelect'),
   familySelect: document.getElementById('familySelect'),
   submitBtn: document.getElementById('submitBtn'),
   submitMessage: document.getElementById('submitMessage'),
   successName: document.getElementById('successName'),
-  successTshirt: document.getElementById('successTshirt'),
   successFamily: document.getElementById('successFamily'),
   detailName: document.getElementById('detailName'),
   detailFormNo: document.getElementById('detailFormNo'),
@@ -366,7 +351,6 @@ els.findBtn.addEventListener('click', () => {
   els.ticketName.textContent = student.name || '—';
   els.ticketCourse.textContent = student.course || '—';
   els.ticketMarks.textContent = student.marks ? `Marks: ${student.marks}` : '';
-  els.tshirtSelect.value = '';
   els.familySelect.value = '0';
 
   els.lookupView.classList.add('hidden');
@@ -380,7 +364,7 @@ els.submitBtn.addEventListener('click', async () => {
     name: currentStudent.name,
     course: currentStudent.course,
     marks: currentStudent.marks,
-    tshirtSize: els.tshirtSelect.value,
+    tshirtSize: '',
     familyCount: els.familySelect.value,
   };
 
@@ -399,7 +383,6 @@ els.submitBtn.addEventListener('click', async () => {
       }
     }
     els.successName.textContent = `Welcome, ${currentStudent.name}!`;
-    els.successTshirt.textContent = payload.tshirtSize || '—';
     els.successFamily.textContent = payload.familyCount;
     els.detailName.textContent = currentStudent.name;
     els.detailFormNo.textContent = currentFormNo;
